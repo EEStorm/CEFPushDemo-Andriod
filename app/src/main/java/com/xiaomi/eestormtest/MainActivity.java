@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,5 +26,9 @@ public class MainActivity extends AppCompatActivity {
         regid = MiPushClient.getRegId(getApplicationContext());
         editText.setText("regid===========\n"+regid);
         editText.setSingleLine(false);
+
+
+        PushManager.startWork(this, PushConstants.LOGIN_TYPE_API_KEY,  "eMS5zqIT0RbRbtDoZHAnze12"  );
+
     }
 }
