@@ -1,8 +1,8 @@
 package com.xiaomi.eestormtest;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 
 
@@ -10,19 +10,14 @@ import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private EditText editText;
     public String regid ;
+    static String EID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,29 +32,37 @@ public class MainActivity extends AppCompatActivity {
         editText.setText("regid===========\n"+regid);
         editText.setSingleLine(false);
 
-        String s = GetPostUrl.post("https://virtserver.swaggerhub.com/MS-ACE/CEF/1.0.0/users",new HashMap<String, String>());
 
-        String eid = "";
-        try {
-            JSONObject jsonObject = new JSONObject(s);
-            eid = jsonObject.getString("eid");
-        }catch(JSONException e){
 
-        }
-        try {
-            JSONObject jsonObject = new JSONObject(s);
-            JSONArray result = jsonObject.getJSONArray("tags");
-            for (int i = 0; i < result.length(); i++) {
-                JSONObject jsonPerson = result.getJSONObject(i);
-                String eara = jsonPerson.getString("name");
+        List tags = new ArrayList();
+        tags.add("test");
+        CEFService.createEID(tags, "storm", new HttpCallBackListener() {
+            @Override
+            public void onFinish(String respose) {
+                EID = respose;
+
+                CEFService.registerNotification(EID, Channel.BAIDU,new HttpCallBackListener() {
+                    @Override
+                    public void onFinish(String respose) {
+                        System.out.print(respose);
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
             }
-            eid = jsonObject.getString("customizedUID");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        System.out.print(eid);
 
-        PushManager.startWork(this, PushConstants.LOGIN_TYPE_API_KEY,  "eMS5zqIT0RbRbtDoZHAnze12"  );
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+
 
     }
+
+
 }

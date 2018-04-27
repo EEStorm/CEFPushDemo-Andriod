@@ -3,7 +3,6 @@ package com.xiaomi.eestormtest;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
@@ -19,45 +18,37 @@ import java.util.List;
 
 public class DemoApplication extends Application {
 
+    private static DemoApplication instant;
+
     public static final String APP_ID = "2882303761517683551";
     public static final String APP_KEY = "5801768389551";
     public static final String TAG = "com.xiaomi.eestormtest";
 
     public String regid ;
 
+    public static DemoApplication getInstant(){
+        return instant;
+    }
     @Override
     public void onCreate() {
         super.onCreate();
         //初始化push推送服务
-        if(shouldInit()) {
-            MiPushClient.registerPush(this, APP_ID, APP_KEY);
 
+        instant = this;
+    }
+    public void registerChannel(){
+        if(shouldInit()) {
+            if (ConfigurationSettings.channel == Channel.BAIDU){
+                PushManager.startWork(this, PushConstants.LOGIN_TYPE_API_KEY,  "eMS5zqIT0RbRbtDoZHAnze12"  );
+            }else {
+                MiPushClient.registerPush(this, APP_ID, APP_KEY);
+
+                MiPushClient.setAlias(getApplicationContext(),"alias",null);
+                MiPushClient.setUserAccount(getApplicationContext(),"userAccount", null);
+
+            }
 
         }
-
-        MiPushClient.setAlias(getApplicationContext(),"alias",null);
-        MiPushClient.setUserAccount(getApplicationContext(),"userAccount", null);
-
-        regid = MiPushClient.getRegId(getApplicationContext());
-        //打开Log
-        LoggerInterface newLogger = new LoggerInterface() {
-
-            @Override
-            public void setTag(String tag) {
-                // ignore
-            }
-
-            @Override
-            public void log(String content, Throwable t) {
-                Log.d(TAG, content, t);
-            }
-
-            @Override
-            public void log(String content) {
-                Log.d(TAG, content);
-            }
-        };
-        Logger.setLogger(this, newLogger);
     }
 
     private boolean shouldInit() {

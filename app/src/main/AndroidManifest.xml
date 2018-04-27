@@ -91,6 +91,20 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".CEFPushMessageReciver" >
+            <intent-filter>
+                <action android:name="com.baidupush.onbindResponseString" />
+                <action android:name="com.baidupush.messageString" />
+                <action android:name="com.baidupush.onNotificationArrived" />
+                <action android:name="com.baidupush.onNotificationClicked" />
+                <action android:name="com.baidupush.onUnbind" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiamipush.messageString" />
+                <action android:name="com.xiamipush.onNotificationclicked" />
+                <action android:name="com.xiamipush.onNotificationArrived" />
+            </intent-filter>
+        </receiver>
 
         <receiver
             android:name="com.baidu.android.pushservice.RegistrationReceiver"
