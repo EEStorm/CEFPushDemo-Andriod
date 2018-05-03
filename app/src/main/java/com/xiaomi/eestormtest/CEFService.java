@@ -48,7 +48,7 @@ public class CEFService extends Application {
 
     public static void registerNotification(final String EID,final Channel channel , final HttpCallBackListener callback){
 
-        DemoApplication.getInstant().registerChannel();
+        CEFApplication.getInstant().registerChannel();
         ConfigurationSettings.channel = channel;
         EId = EID;
         ProfileCallback = callback;

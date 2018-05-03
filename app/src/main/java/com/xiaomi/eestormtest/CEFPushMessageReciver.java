@@ -39,32 +39,29 @@ public class CEFPushMessageReciver extends BroadcastReceiver{
         switch (action){
             case BAIDU_ONBIND:
                 String responseString = intent.getStringExtra(BAIDU_ONBIND);
-                reciver.baiduOnbind(context,responseString);
+//                reciver.baiduOnbind(context,responseString);
                 testbaiduOnbind(responseString);
                 break;
             case BAIDU_MESSAGE:
                 String messageString = intent.getStringExtra(BAIDU_MESSAGE);
-                reciver.baiduOnMessage(context,messageString);
+                reciver.onMessage(context,messageString);
                 break;
             case BAIDU_NOTIFICATION_ARRIVED:
                 String onNotificationArrived = intent.getStringExtra(BAIDU_NOTIFICATION_ARRIVED);
-                reciver.baiduOnNotificationArrived(context,onNotificationArrived);
+                reciver.onNotificationArrived(context,onNotificationArrived);
                 break;
-            case BAIDU_ONUNBIND:
-                String baiduOnNotificationClicked = intent.getStringExtra(BAIDU_ONUNBIND);
-                reciver.baiduOnUnbind(context,baiduOnNotificationClicked);
-                break;
+
             case XIAOMI_MESSAGE:
                 String xiaomiMessage = intent.getStringExtra(XIAOMI_MESSAGE);
-                reciver.xiaomiThroughMessage(context,xiaomiMessage);
+                reciver.onMessage(context,xiaomiMessage);
                 break;
             case XIAOMI_ONTIFICATIONCLICKED:
                 String xiaomiClicked = intent.getStringExtra(XIAOMI_ONTIFICATIONCLICKED);
-                reciver.xiaomiNotificationClicked(context,xiaomiClicked);
+                reciver.onNotificationClicked(context,xiaomiClicked);
                 break;
             case XIAOMI_NOTIFICATIONARRIVED:
                 String xiaomiArrived = intent.getStringExtra(XIAOMI_NOTIFICATIONARRIVED);
-                reciver.xiaomiNotificationArrived(context,xiaomiArrived);
+                reciver.onNotificationArrived(context,xiaomiArrived);
                 break;
 //            case
         }

@@ -9,33 +9,18 @@ import android.content.Intent;
 
 public class CEFDemoMessageReceiver extends  CEFPushMessageReciver {
 
-    public void baiduOnbind(Context context, String responseString){
 
-        System.out.print(responseString);
-
-    }
-
-    public void baiduOnMessage(Context context, String responseString){
+    public void onMessage(Context context, String responseString){
 
     }
 
-    public void baiduOnNotificationArrived(Context context, String responseString){
+    public void onNotificationArrived(Context context, String responseString){
 
     }
 
-    public void baiduOnUnbind(Context context, String responseString){
+    public void onNotificationClicked(Context context, String responseString){
 
     }
 
-    public void xiaomiThroughMessage(Context context, String responseString){
-
-    }
-
-    public void xiaomiNotificationClicked(Context context, String responseString){
-
-    }
-    public void xiaomiNotificationArrived(Context context, String responseString){
-
-    }
 
 }

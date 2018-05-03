@@ -16,9 +16,9 @@ import java.util.List;
  * Created by v-shbo on 2018/1/31.
  */
 
-public class DemoApplication extends Application {
+public class CEFApplication extends Application {
 
-    private static DemoApplication instant;
+    private static CEFApplication instant;
 
     public static final String APP_ID = "2882303761517683551";
     public static final String APP_KEY = "5801768389551";
@@ -26,7 +26,7 @@ public class DemoApplication extends Application {
 
     public String regid ;
 
-    public static DemoApplication getInstant(){
+    public static CEFApplication getInstant(){
         return instant;
     }
     @Override
