@@ -1,18 +1,23 @@
 package com.xiaomi.eestormtest;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
-import android.widget.TextView;
+
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText editText;
     public String regid ;
+    static String EID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +33,36 @@ public class MainActivity extends AppCompatActivity {
         editText.setSingleLine(false);
 
 
-        PushManager.startWork(this, PushConstants.LOGIN_TYPE_API_KEY,  "eMS5zqIT0RbRbtDoZHAnze12"  );
+
+        List tags = new ArrayList();
+        tags.add("test");
+        CEFService.createEID(tags, "storm", new HttpCallBackListener() {
+            @Override
+            public void onFinish(String respose) {
+                EID = respose;
+
+                CEFService.registerNotification(EID, Channel.BAIDU,new HttpCallBackListener() {
+                    @Override
+                    public void onFinish(String respose) {
+                        System.out.print(respose);
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+
 
     }
+
+
 }

@@ -48,8 +48,13 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
             // 绑定成功
             Log.d(TAG, "绑定成功");
         }
+
+
+        if (ConfigurationSettings.channel == Channel.BAIDU){
+            CEFService.registerNotificationPost(userId,channelId);
+        }
         // Demo更新界面展示代码，应用请在这里加入自己的处理逻辑
-        updateContent(context, responseString);
+        updateContent(context, responseString,"com.baidupush.onbindResponseString");
     }
 
     /**
@@ -80,8 +85,7 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
             }
         }
 
-        // Demo更新界面展示代码，应用请在这里加入自己的处理逻辑
-        updateContent(context, messageString);
+        updateContent(context, messageString,"com.baidupush.messageString");
     }
 
     /**
@@ -118,7 +122,7 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
         }
         // Demo更新界面展示代码，应用请在这里加入自己的处理逻辑
         // 你可以參考 onNotificationClicked中的提示从自定义内容获取具体值
-        updateContent(context, notifyString);
+        updateContent(context, notifyString,"com.baidupush.onNotificationArrived");
     }
 
     /**
@@ -164,7 +168,7 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
         Log.d(TAG, responseString);
 
         // Demo更新界面展示代码，应用请在这里加入自己的处理逻辑
-        updateContent(context, responseString);
+//        updateContent(context, responseString);
     }
 
     /**
@@ -185,7 +189,7 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
         Log.d(TAG, responseString);
 
         // Demo更新界面展示代码，应用请在这里加入自己的处理逻辑
-        updateContent(context, responseString);
+//        updateContent(context, responseString);
     }
 
     /**
@@ -204,7 +208,7 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
         Log.d(TAG, responseString);
 
         // Demo更新界面展示代码，应用请在这里加入自己的处理逻辑
-        updateContent(context, responseString);
+//        updateContent(context, responseString);
     }
 
     /**
@@ -225,26 +229,16 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
             Log.d(TAG, "解绑成功");
         }
         // Demo更新界面展示代码，应用请在这里加入自己的处理逻辑
-        updateContent(context, responseString);
+        updateContent(context, responseString,"com.baidupush.onUnbind");
     }
 
-    private void updateContent(Context context, String content) {
-//        Log.d(TAG, "updateContent");
-//        String logText = "" + Utils.logStringCache;
-//
-//        if (!logText.equals("")) {
-//            logText += "\n";
-//        }
-//
-//        SimpleDateFormat sDateFormat = new SimpleDateFormat("HH-mm-ss");
-//        logText += sDateFormat.format(new Date()) + ": ";
-//        logText += content;
-//
-//        Utils.logStringCache = logText;
-//
-//        Intent intent = new Intent();
-//        intent.setClass(context.getApplicationContext(), PushDemoActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.getApplicationContext().startActivity(intent);
+    private void updateContent(Context context, String content,String actionID) {
+//        List a = new ArrayList<>() ;
+//        HashMap<String, String>
+        Intent intent = new Intent();
+        intent.setAction(actionID);
+        intent.putExtra(actionID,content);
+        context.sendBroadcast(intent);
+
     }
 }

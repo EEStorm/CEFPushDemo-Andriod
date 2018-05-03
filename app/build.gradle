@@ -28,5 +28,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile files('libs/MiPush_SDK_Client_3_6_0.jar')
+    compile 'com.google.code.gson:gson:2.8.2'
     compile files('libs/pushservice-5.8.0.9.jar')
+
 }
