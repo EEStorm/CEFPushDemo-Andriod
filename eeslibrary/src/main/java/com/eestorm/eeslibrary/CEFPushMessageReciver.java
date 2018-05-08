@@ -1,10 +1,9 @@
-package com.xiaomi.eestormtest;
+package com.eestorm.eeslibrary;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 
 /**
@@ -35,12 +34,13 @@ public class CEFPushMessageReciver extends BroadcastReceiver{
         String action = intent.getAction();
 
 
-        CEFDemoMessageReceiver reciver = new CEFDemoMessageReceiver();
+        CEFMessageReciverInterface reciver = null;
         switch (action){
             case BAIDU_ONBIND:
                 String responseString = intent.getStringExtra(BAIDU_ONBIND);
 //                reciver.baiduOnbind(context,responseString);
-                testbaiduOnbind(responseString);
+         //       testbaiduOnbind(responseString);
+                reciver.onMessage(context,responseString);
                 break;
             case BAIDU_MESSAGE:
                 String messageString = intent.getStringExtra(BAIDU_MESSAGE);

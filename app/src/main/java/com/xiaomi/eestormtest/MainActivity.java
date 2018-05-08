@@ -1,30 +1,31 @@
 package com.xiaomi.eestormtest;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 
 
-import com.baidu.android.pushservice.PushConstants;
-import com.baidu.android.pushservice.PushManager;
+import com.eestorm.eeslibrary.Channel;
+import com.eestorm.eeslibrary.HttpCallBackListener;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eestorm.eeslibrary.CEFClient;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText editText;
     public String regid ;
-    static String EID;
+    static String EID = "111";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setContentView(R.layout.activity_main);
         //使用findViewById 得到TextView对象
         editText = (EditText)findViewById(R.id.regid);
         //使用setText()方法修改文本
@@ -36,23 +37,13 @@ public class MainActivity extends AppCompatActivity {
 
         List tags = new ArrayList();
         tags.add("test");
-        CEFService.createEID(tags, "storm", new HttpCallBackListener() {
+        EID =  new CEFClient(this).createEID(tags, "storm");
+        Log.i("httprequest","====MainActivity==="+EID);
+        CEFClient.registerNotification(EID, Channel.BAIDU,new HttpCallBackListener() {
             @Override
             public void onFinish(String respose) {
-                EID = respose;
+                System.out.print(respose);
 
-                CEFService.registerNotification(EID, Channel.BAIDU,new HttpCallBackListener() {
-                    @Override
-                    public void onFinish(String respose) {
-                        System.out.print(respose);
-
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-
-                    }
-                });
             }
 
             @Override
@@ -60,9 +51,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
-
-
 }

@@ -1,4 +1,4 @@
-package com.xiaomi.eestormtest;
+package com.eestorm.eeslibrary;
 
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +51,7 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
 
 
         if (ConfigurationSettings.channel == Channel.BAIDU){
-            CEFService.registerNotificationPost(userId,channelId);
+            CEFClient.registerNotificationPost(userId,channelId);
         }
         // Demo更新界面展示代码，应用请在这里加入自己的处理逻辑
         updateContent(context, responseString,"com.baidupush.onbindResponseString");
@@ -141,12 +141,12 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
         Log.d(TAG, notifyString);
 
         // TODO: 2017/8/15 以下为点击打开到MainActivity的方法。
-        Intent intent = new Intent(context.getApplicationContext(),MainActivity.class);
-        intent.putExtra("title",title);
-        intent.putExtra("description",description);
-        intent.putExtra("isFromNotify",true);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.getApplicationContext().startActivity(intent);
+    //    Intent intent = new Intent(context.getApplicationContext(),MainActivity.class);
+     //   intent.putExtra("title",title);
+     //   intent.putExtra("description",description);
+     //   intent.putExtra("isFromNotify",true);
+     //   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+     //   context.getApplicationContext().startActivity(intent);
 
     }
 

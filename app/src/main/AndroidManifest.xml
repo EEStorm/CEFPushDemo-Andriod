@@ -65,7 +65,7 @@
             android:launchMode="singleTask" />
 
         <!-- push应用定义消息receiver声明 -->
-        <receiver android:name=".BaiduPushMessageReceiver">
+        <receiver android:name="com.eestorm.eeslibrary.BaiduPushMessageReceiver">
             <intent-filter>
 
                 <!-- 接收push消息 -->
@@ -91,7 +91,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".CEFPushMessageReciver" >
+        <receiver android:name="com.eestorm.eeslibrary.CEFPushMessageReciver" >
             <intent-filter>
                 <action android:name="com.baidupush.onbindResponseString" />
                 <action android:name="com.baidupush.messageString" />
@@ -145,6 +145,18 @@
             android:name="api_key"
             android:value="eMS5zqIT0RbRbtDoZHAnze12" />
 
+        <meta-data
+            android:name="mi_app_id"
+            android:value="A2882303761517683551" />
+
+        <meta-data
+            android:name="MI_APP_KEY"
+            android:value="A5801768389551" />
+
+        <meta-data
+            android:name="baidu_app_key"
+            android:value="eMS5zqIT0RbRbtDoZHAnze12" />
+
         <service
             android:enabled="true" android:process=":pushservice" android:name="com.xiaomi.push.service.XMPushService"/>
         <service
@@ -176,7 +188,7 @@
 
         <receiver
             android:exported="true"
-            android:name="com.xiaomi.eestormtest.DemoMessageReceiver">
+            android:name="com.xiaomi.eestormtest.CEFDemoMessageReceiver">
             <!--这里com.xiaomi.mipushdemo.DemoMessageRreceiver改成app中定义的完整类名-->
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />

@@ -1,4 +1,4 @@
-package com.xiaomi.eestormtest;
+package com.eestorm.eeslibrary;
 
 import android.content.Context;
 import android.content.Intent;
