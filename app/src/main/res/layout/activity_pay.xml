@@ -5,20 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.xiaomi.eestormtest.MainActivity">
-
-    <EditText
-        android:id="@+id/regid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:maxLines="5"
-        />
+    tools:context="com.xiaomi.eestormtest.pay.PayActivity">
 
     <Button
+        android:id="@+id/wxPayBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="toPay"
-        android:text="WX/支付宝支付"/>
+        android:onClick="WXPay"
+        android:text="微信"/>
 
 </LinearLayout>

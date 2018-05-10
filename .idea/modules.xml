@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/ESSpaySDK/ESSpaySDK.iml" filepath="$PROJECT_DIR$/ESSpaySDK/ESSpaySDK.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eeslibrary/eeslibrary.iml" filepath="$PROJECT_DIR$/eeslibrary/eeslibrary.iml" />
+      <module fileurl="file://C:\Users\v-bachan\StudioProjects\eestormtest\eespushSDK\eeslibrary.iml" filepath="C:\Users\v-bachan\StudioProjects\eestormtest\eespushSDK\eeslibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eespushSDK/eespushSDK.iml" filepath="$PROJECT_DIR$/eespushSDK/eespushSDK.iml" />
       <module fileurl="file://$PROJECT_DIR$/eestormtest.iml" filepath="$PROJECT_DIR$/eestormtest.iml" />
     </modules>
   </component>

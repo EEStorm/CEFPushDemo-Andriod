@@ -1,1 +1,1 @@
-include ':app', ':eeslibrary'
+include ':app', ':eespushSDK', ':ESSpaySDK'

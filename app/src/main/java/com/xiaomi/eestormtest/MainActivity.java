@@ -1,13 +1,16 @@
 package com.xiaomi.eestormtest;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 
 
 import com.eestorm.eeslibrary.Channel;
 import com.eestorm.eeslibrary.HttpCallBackListener;
+import com.xiaomi.eestormtest.pay.PayActivity;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.util.ArrayList;
@@ -51,5 +54,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void toPay(View view){
+        Intent intent = new Intent();
+        intent.setClass(this, PayActivity.class);
+        startActivity(intent);
     }
 }
