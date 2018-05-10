@@ -9,12 +9,16 @@ import android.widget.Toast;
 
 import com.eestorm.eeslibrary.CEFClient;
 import com.eestorm.eeslibrary.HttpCallBackListener;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.xiaomi.eestormtest.LogInterceptor;
 import com.xiaomi.eestormtest.R;
+import com.xiaomi.eestormtest.pay.wx.PayEntity;
+import com.xiaomi.eestormtest.pay.wx.PayResponeEntity;
 import com.xiaomi.eestormtest.pay.wx.WeChatPayEntity;
 
 import org.json.JSONException;
@@ -51,94 +55,93 @@ public class PayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pay);
     }
 
-    public void WXPay(View view){
+    public void WXPay(View view) throws IOException {
 
-
-        postDataWithParame();
-
-        /**
-         *
-         List tags = new ArrayList();
-         tags.add("test");
-         final String url = "https://xzshengwebhookwatcher.azurewebsites.net/api/weChatPaymentWebhook";
-         final String EID = new CEFClient(this).createEID(tags, "storm");
-         Log.d(TAG, "EID: "+EID);
+        List tags = new ArrayList();
+        tags.add("test");
+        final String url = "https://xzshengwebhookwatcher.azurewebsites.net/api/weChatPaymentWebhook";
+        final String EID = new CEFClient(this).createEID(tags, "storm");
+        Log.d(TAG, "EID: " + EID);
 
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    String baseUrl = "http://cefsfcluster.chinanorth.cloudapp.chinacloudapi.cn/serviceProviders/payment/createOrder";
-                  String as =  post(baseUrl);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                requestPost("", EID, "WeChat", "Test", "TestTradeNumber15", "1", url, new HttpCallBackListener() {
+                requestPost("wxa186d3f0aa51c56e", EID, "WeChat", "Test", "TestTradeNumber15", "1", url, new HttpCallBackListener() {
                     @Override
                     public void onFinish(String respose) {
-                        Log.d(TAG, "onFinish====requestPost: "+respose);
+                        Log.d(TAG, "onFinish====requestPost: " + respose);
+                        Gson gson = new Gson();
+                        PayResponeEntity   mPayResponeEntity = gson.fromJson(respose, PayResponeEntity.class);
+                        weChatPay(mPayResponeEntity.getProperties());
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.d(TAG, "onError ====requestPost: "+e.toString());
+                        Log.d(TAG, "onError ====requestPost: " + e.toString());
                     }
                 });
             }
         }).start();
 
-         */
     }
 
-    private void weChatPay(WeChatPayEntity entity){
-        api = WXAPIFactory.createWXAPI(this,APP_ID );
+    private void weChatPay(WeChatPayEntity entity) {
+        api = WXAPIFactory.createWXAPI(this, APP_ID);
         api.registerApp(APP_ID);
         PayReq req = new PayReq();
-        req.appId			= entity.appId;
-        req.partnerId		= entity.partnerId;
-        req.prepayId		= entity.prepayId;
-        req.nonceStr		= entity.nonceStr;
-        req.timeStamp		= entity.timeStamp;
-        req.packageValue	= entity.packageValue;
-        req.sign			= entity.sign;
-        req.extData			= "app data"; // optional
+        req.appId = entity.appid;
+        req.partnerId = entity.partnerid;
+        req.prepayId = entity.prepayid;
+        req.nonceStr = entity.noncestr;
+        req.timeStamp = entity.timestamp;
+        req.packageValue = entity.packageValue;
+        req.sign = entity.sign;
+        req.extData = "app data"; // optional
 
         api.sendReq(req);
     }
 
 
-    OkHttpClient client = new OkHttpClient();
-    String post(String url) throws IOException {
+    void post(String url) throws IOException {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new LogInterceptor())
+                .build();
         List tags = new ArrayList();
         tags.add("test");
         final String EID = new CEFClient(this).createEID(tags, "storm");
         final String notifyUrl = "https://xzshengwebhookwatcher.azurewebsites.net/api/weChatPaymentWebhook";
-        RequestBody formBody = new FormBody.Builder()
-                .add("appId", "wxa186d3f0aa51c56e")
-                .add("eid", EID)
-                .add("channel", "WeChat")
-                .add("subject", "test")
-                .add("tradeNumber", "TestTradeNumber15")
-                .add("amount", "1")
-                .add("notifyUrl", notifyUrl)
-                .build();
+        PayEntity mPayEntity = new PayEntity();
+        mPayEntity.setAppId("wxa186d3f0aa51c56e");
+        mPayEntity.setEid(EID);
+        mPayEntity.setChannel("WeChat");
+        mPayEntity.setTradeNumber("TestTradeNumber15");
+        mPayEntity.setAmount("1");
+        mPayEntity.setNotifyUrl(notifyUrl);
 
-        Log.d("cacacacacacac","formBody:"+formBody.toString());
+        Gson gson = new Gson();
+        //使用Gson将对象转换为json字符串
+        String json = gson.toJson(mPayEntity);
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8")
+                , json);
+        Log.d("cacacacacacac", "json:" + json + "  body:" + requestBody.toString());
         Request request = new Request.Builder()
                 .url(url)
-                .post(formBody)
+                .post(requestBody)
                 .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("cacacacacacac", "获取数据失败了");
+            }
 
-        Response response = client.newCall(request).execute();
-        if (response.isSuccessful()) {
-            String res = response.body().string();
-            Log.d(TAG, "post: "+res);
-            return res;
-        } else {
-            throw new IOException("Unexpected code " + response);
-        }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d("cacacacacacac", "获取数据成功了");
+                Log.d("cacacacacacac", "response.code()==" + response.code());
+                Log.d("cacacacacacac", "response.body().string()==" + response.body().string());
+            }
+        });//回调方法的使用与get异步请求相同，此时略。
     }
 
     private void postDataWithParame() {
@@ -146,11 +149,12 @@ public class PayActivity extends AppCompatActivity {
         tags.add("test");
         final String EID = new CEFClient(this).createEID(tags, "storm");
         final String notifyUrl = "https://xzshengwebhookwatcher.azurewebsites.net/api/weChatPaymentWebhook";
-      //  String baseUrl = "http://cefsfcluster.chinanorth.cloudapp.chinacloudapi.cn/serviceProviders/payment/createOrder";
-        String baseUrl = "http://xzshengpaymentstaging.eastasia.cloudapp.azure.com/serviceProviders/payment/createOrde";
-        OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象。
-        FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
-        formBody.add("appId", "appId")
+        String baseUrl = "http://xzshengpaymentstaging.eastasia.cloudapp.azure.com/serviceProviders/payment/createOrder";
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new LogInterceptor())
+                .build();//创建OkHttpClient对象。
+        final FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
+        formBody.add("appId", "wxa186d3f0aa51c56e")
                 .add("eid", EID)
                 .add("channel", "WeChat")
                 .add("subject", "test")
@@ -161,24 +165,24 @@ public class PayActivity extends AppCompatActivity {
                 .url(baseUrl)
                 .post(formBody.build())//传递请求体
                 .build();
+        Log.d("cacacacacacac", "formBody:" + formBody.toString());
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d("cacacacacacac","获取数据失败了");
+                Log.d("cacacacacacac", "获取数据失败了");
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d("cacacacacacac","获取数据成功了");
-                Log.d("cacacacacacac","response.code()=="+response.code());
-                Log.d("cacacacacacac","response.body().string()=="+response.body().string());
+                Log.d("cacacacacacac", "获取数据成功了");
+                Log.d("cacacacacacac", "response.code()==" + response.code());
+                Log.d("cacacacacacac", "response.body().string()==" + response.body().string());
             }
         });//回调方法的使用与get异步请求相同，此时略。
     }
 
     /**
-     *
-     * @param appId   optional, only used for check
+     * @param appId       optional, only used for check
      * @param eid
      * @param channel
      * @param subject
@@ -187,9 +191,9 @@ public class PayActivity extends AppCompatActivity {
      * @param notifyUrl
      * @param callback
      */
-    private static void requestPost(String appId,String eid,String channel,String subject,String tradeNumber,String amount,String notifyUrl, final HttpCallBackListener callback) {
+    private static void requestPost(String appId, String eid, String channel, String subject, String tradeNumber, String amount, String notifyUrl, final HttpCallBackListener callback) {
         try {
-            String baseUrl = "http://cefsfcluster.chinanorth.cloudapp.chinacloudapi.cn/serviceProviders/payment/createOrder";
+            String baseUrl = "http://xzshengpaymentstaging.eastasia.cloudapp.azure.com/serviceProviders/payment/createOrder";
             JsonObject json = new JsonObject();
             json.addProperty("appId", appId);
             json.addProperty("eid", eid);
@@ -215,11 +219,11 @@ public class PayActivity extends AppCompatActivity {
             dos.close();
             if (urlConn.getResponseCode() == 200) {
                 String result = streamToString(urlConn.getInputStream());
-                Log.d(TAG, "success=======requestPost: "+result);
+                Log.d(TAG, "success=======requestPost: " + result);
                 callback.onFinish(result);
 
             } else {
-                Log.d(TAG, "shibai======error: "+urlConn.getResponseCode());
+                Log.d(TAG, "shibai======error: " + urlConn.getResponseCode());
             }
             urlConn.disconnect();
 
