@@ -14,4 +14,11 @@
         android:onClick="WXPay"
         android:text="微信"/>
 
+    <Button
+        android:id="@+id/wxAliBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="AliPay"
+        android:text="支付宝"/>
+
 </LinearLayout>

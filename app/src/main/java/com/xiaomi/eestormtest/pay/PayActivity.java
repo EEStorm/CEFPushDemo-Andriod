@@ -1,12 +1,18 @@
 package com.xiaomi.eestormtest.pay;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.eestorm.eeslibrary.CEFClient;
 import com.eestorm.eeslibrary.HttpCallBackListener;
 import com.google.gson.Gson;
@@ -17,6 +23,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.xiaomi.eestormtest.LogInterceptor;
 import com.xiaomi.eestormtest.R;
+import com.xiaomi.eestormtest.pay.ali.PayResult;
 import com.xiaomi.eestormtest.pay.wx.PayEntity;
 import com.xiaomi.eestormtest.pay.wx.PayResponeEntity;
 import com.xiaomi.eestormtest.pay.wx.WeChatPayEntity;
@@ -32,6 +39,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -48,6 +56,11 @@ public class PayActivity extends AppCompatActivity {
     private static String Eid;
     private IWXAPI api;
     private String APP_ID = "wxb4ba3c02aa476ea1";
+
+    /**
+     * 支付宝支付业务：入参app_id
+     */
+    private static final int SDK_PAY_FLAG = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +98,68 @@ public class PayActivity extends AppCompatActivity {
         }).start();
 
     }
+
+    private void AliPay(View view){
+
+    }
+
+    private void initZFB() {
+
+        //orderInfo 后台给的
+        Runnable payRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+               String str = "app_id=2017111609966863&method=alipay.trade.app.pay&format=JSON&charset=utf-8&sign_type=RSA2&version=1.0&return_url=&notify_url=&timestamp=2017-12-01+14%3A42%3A57&sign=rLOtYId3y5rUaXnWl2sEjFJQ7k5ATyanjddS1oNbX69G194VMNBcWKEqLGfmvlpN91sWmasYn24IPX7YhJYNZTkGStyvLednht9LUMClbeDa%2FSxB6DHS0FE77EaAOa970KEhix4fO%2Fu96%2B%2BlJHiPB4m0jf%2Bw43Hc4m7z2Oy86DPJOfFpxb4vPeY9tTurAG8QM18BQAh%2FHw207%2FFkOrSJ1u9x3Vw6ZMdemIRTaFy5HDdu6xYRgR2%2FyVJIq%2B9lHtzQRY4BhzdmdsWBUu7MeFP4uIEtE%2FfQcdK87MoCPZI%2FudtuwzfVwmZKIWQ3%2BaDkbVTDTGeLVNuwlbGl%2FdzHN1NH9Q%3D%3D&biz_content=%7B%22out_trade_no%22%3A%221712010242573400328%22%2C%22total_amount%22%3A%223852.00%22%2C%22subject%22%3A%22a1712010242573400328%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%7D";
+                PayTask alipay = new PayTask(PayActivity.this);
+                Map<String, String> result = alipay.payV2(str, true);
+                Log.i("msp", result.toString());
+
+                Message msg = new Message();
+                msg.what = SDK_PAY_FLAG;
+                msg.obj = result;
+                mHandler.sendMessage(msg);
+            }
+        };
+
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
+    }
+
+    private Handler handler = new Handler();
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @SuppressWarnings("unused")
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SDK_PAY_FLAG: {
+                    @SuppressWarnings("unchecked")
+                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                    /**
+                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    Log.i("resultStatus", "resultStatus:" + resultStatus);
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                        Toast.makeText(PayActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        Toast.makeText(PayActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+        ;
+    };
 
     private void weChatPay(WeChatPayEntity entity) {
         api = WXAPIFactory.createWXAPI(this, APP_ID);
