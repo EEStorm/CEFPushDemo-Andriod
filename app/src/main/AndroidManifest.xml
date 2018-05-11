@@ -148,6 +148,21 @@
             android:name="baidu_app_key"
             android:value="eMS5zqIT0RbRbtDoZHAnze12" />
 
+        <!-- 在微信注册的API Key -->
+        <meta-data
+            android:name="weixinappid"
+            android:value="xxxxxx" />
+        <meta-data
+            android:name="weixinappkey"
+            android:value="xxxxx" />
+
+        <activity
+            android:name="com.xiaomi.eestormtest.pay.wxapi.WXEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoDisplay" />
+
+
         <service
             android:name="com.xiaomi.push.service.XMPushService"
             android:enabled="true"
@@ -204,15 +219,13 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
-        </activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
         <activity
             android:name="com.alipay.sdk.app.H5AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
-        </activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
 
         <activity android:name=".pay.PayActivity"></activity>
     </application>

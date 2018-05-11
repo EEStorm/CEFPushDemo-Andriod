@@ -18,6 +18,7 @@ import com.eestorm.eeslibrary.HttpCallBackListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -56,7 +57,6 @@ public class PayActivity extends AppCompatActivity {
     private static String Eid;
     private IWXAPI api;
     private String APP_ID = "wxb4ba3c02aa476ea1";
-
     /**
      * 支付宝支付业务：入参app_id
      */
@@ -67,6 +67,26 @@ public class PayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay);
     }
+
+
+    private void loginWithWX(){
+        //api注册
+        api = WXAPIFactory.createWXAPI(this, "APP_ID", true);
+        api.registerApp("APP_ID");
+
+        SendAuth.Req req = new SendAuth.Req();
+        //授权读取用户信息
+        req.scope = "snsapi_userinfo";
+
+        //自定义信息
+        req.state = "wechat_sdk_demo_test";
+
+        //向微信发送请求
+        api.sendReq(req);
+    }
+
+
+
 
     public void WXPay(View view) throws IOException {
 
